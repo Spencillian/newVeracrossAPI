@@ -32,7 +32,7 @@ Below are the definitions for the `"data"` field
 The response here is not supposed to include much information
 and may be deleted in the near future as it poses a security risk.
 
-###Registering New Users
+### Registering New Users
 
 **Definitions**
 
