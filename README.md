@@ -38,10 +38,12 @@ and may be deleted in the near future as it poses a security risk.
 
 `POST /users`
 
-**Arguments**
+**Arguments** 
 
 - `"username":string` : `USERNAME` : a globally unique id for each user
 - `"password":string` : `PASSWORD` : password associated with user
+
+SPECIAL CHARACTERS MUST BE ENCODED FOR USERNAMES AND PASSWORDS TO WORK
 
 If a user already has the username, then the existing user will be over written.
 
