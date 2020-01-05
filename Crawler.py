@@ -11,7 +11,7 @@ class Crawler:
         self.letter_grades = None
 
         chrome_options = Options()
-        # chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--headless')
 
         self.driver = webdriver.Chrome(chrome_options=chrome_options)
 
@@ -29,12 +29,8 @@ class Crawler:
         self.number_grades = self.driver.find_elements_by_xpath("//span[@class='numeric-grade']")
         self.letter_grades = self.driver.find_elements_by_xpath("//span[@class='letter-grade']")
 
-        self.driver.close()
-
     def get_grades(self, num_classes):
         grades = []
-
-        print(len(self.class_names))
 
         for i in range(num_classes):
             grades.append({self.class_names[i].text: self.number_grades[i].text})
@@ -42,4 +38,5 @@ class Crawler:
         for i in range(num_classes):
             grades.append({self.class_names[i].text: self.letter_grades[i].text})
 
+        self.driver.close()
         return grades

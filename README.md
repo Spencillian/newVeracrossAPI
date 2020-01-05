@@ -57,7 +57,7 @@ If a user already has the username, then the existing user will be over written.
 
 ## Get grades from users
 
-`GET /users/<id>`
+`GET /users/<id>&`
 
 **Response**
 

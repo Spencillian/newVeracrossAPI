@@ -63,14 +63,29 @@ class User(Resource):
     def get(self, username):
         shelf = get_db()
 
+        parser = reqparse.RequestParser()
+
+        parser.add_argument('num_classes', required=True)
+
+        args = parser.parse_args()
+
         if not (username in shelf):
             return {'message': f"User {username} not found", 'data': {}}, 404
 
+        try:
+            args['num_classes'] = int(args['num_classes'])
+        except TypeError:
+            return {'message': f"{args['num_classes']} is not a valid number of classes", 'data': {}}, 400
+
+        if args['num_classes'] > 7:
+            return {'message': f"{args['num_classes']} is not a valid number of classes", 'data': {}}, 400
+
         c = Crawler()
-        print(shelf[username]['password'])
         c.navigate(shelf[username]['username'], shelf[username]['password'])
-        grades = c.get_grades(6)
-        print(grades)
+
+        grades = c.get_grades(args['num_classes'])
+
+        # print(grades)
 
         return {'message': 'User found', 'data': grades}, 200
 
