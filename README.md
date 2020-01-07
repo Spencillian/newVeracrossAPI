@@ -59,7 +59,13 @@ If a user already has the username, then the existing user will be over written.
 
 ## Get grades from users
 
-`GET /users/<id>&`
+`GET /users/<id>`
+
+**Arguments**
+
+###### % Soon to be deprecated as the number of classes can be gotten from code %
+- `"num_classes":int` : Number of classes
+
 
 **Response**
 
