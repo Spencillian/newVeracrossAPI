@@ -1,6 +1,7 @@
 import os
 import markdown
 import shelve
+from flask import request
 from Crawler import Crawler
 
 from flask import Flask, g
@@ -46,49 +47,23 @@ class UserList(Resource):
         return {'message': "Success", 'data': keys}, 200
 
     def post(self):
-        parser = reqparse.RequestParser()
-
-        parser.add_argument('username', required=True)
-        parser.add_argument('password', required=True)
-
-        args = parser.parse_args()
+        req_data = request.get_json()
 
         shelf = get_db()
-        shelf[args['username']] = args
+        shelf[req_data['username']] = req_data
 
-        return {'message': "User Registered", 'data': args['username']}, 201
+        c = Crawler()
+        c.navigate(shelf[req_data['username']]['username'], shelf[req_data['username']]['password'])
+
+        grades = c.get_grades()
+
+        if not grades:
+            return {'message': f"The username {shelf[req_data['username']]['username']} or password {shelf[req_data['username']]['password']} is incorrect"}, 400
+
+        return {'message': "User Registered", 'data': grades}, 200
 
 
 class User(Resource):
-    def get(self, username):
-        shelf = get_db()
-
-        parser = reqparse.RequestParser()
-
-        parser.add_argument('num_classes', required=True)
-
-        args = parser.parse_args()
-
-        if not (username in shelf):
-            return {'message': f"User {username} not found", 'data': {}}, 404
-
-        try:
-            args['num_classes'] = int(args['num_classes'])
-        except TypeError:
-            return {'message': f"{args['num_classes']} is not a valid number of classes", 'data': {}}, 400
-
-        if args['num_classes'] > 7:
-            return {'message': f"{args['num_classes']} is not a valid number of classes", 'data': {}}, 400
-
-        c = Crawler()
-        c.navigate(shelf[username]['username'], shelf[username]['password'])
-
-        grades = c.get_grades(args['num_classes'])
-
-        # print(grades)
-
-        return {'message': 'User found', 'data': grades}, 200
-
     def delete(self, username):
         shelf = get_db()
 

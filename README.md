@@ -32,18 +32,27 @@ Below are the definitions for the `"data"` field
 The response here is not supposed to include much information
 and may be deleted in the near future as it poses a security risk.
 
-### Registering New Users
+### Requesting Grades
 
 **Definitions**
 
 `POST /users`
 
-**Arguments** 
+**Post Body** - From client - React NativeA
 
-- `"username":string` : `USERNAME` : a globally unique id for each user
-- `"password":string` : `PASSWORD` : password associated with user
-
-SPECIAL CHARACTERS MUST BE ENCODED FOR USERNAMES AND PASSWORDS TO WORK
+```
+fetch('https://randomString.ngrok.com/users/', {
+    method: 'POST',
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        username: "username",
+        password: "password",
+    }),
+});
+```
 
 If a user already has the username, then the existing user will be over written.
 
@@ -53,36 +62,19 @@ If a user already has the username, then the existing user will be over written.
 
 ```json
 {
-    "username": "lis73243"
-}
-```
-
-## Get grades from users
-
-`GET /users/<id>`
-
-**Arguments**
-
-###### % Soon to be deprecated as the number of classes can be gotten from code %
-- `"num_classes":int` : Number of classes
-
-
-**Response**
-
-- `404 Not Found` if the device is not found
-- `200 OK` on success
-
-```json
-{
-    "username": "lis73243",
-
-    "num_grade_0": "num_grade_0",
-    "num_grade_1": "num_grade_1",
-    "num_grade_#": "num_grade_#",
-
-    "let_grade_0": "let_grade_0",
-    "let_grade_1": "let_grade_1",
-    "let_grade_#": "let_grade_#"
+    "message": "User found", 
+    "data": [{
+        "id": "INT_id",
+        "name": "course_name",
+        "number": "INT_number_grade",
+        "letter": "letter_grade"
+    },
+    {
+        "id": 0,
+        "name": "English 2",
+        "number": 98.9,
+        "letter": "A+"
+    }]
 }
 ```
 
@@ -90,7 +82,7 @@ If a user already has the username, then the existing user will be over written.
 
 **Definitions**
 
-`DELETE /devices/<id>`
+`DELETE /users/<id>`
 
 **Response**
 

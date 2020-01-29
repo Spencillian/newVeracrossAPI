@@ -28,14 +28,23 @@ class Crawler:
         self.number_grades = self.driver.find_elements_by_xpath("//span[@class='numeric-grade']")
         self.letter_grades = self.driver.find_elements_by_xpath("//span[@class='letter-grade']")
 
-    def get_grades(self, num_classes):
+        try:
+            for i, val in enumerate(self.number_grades):
+                self.number_grades[i] = float(val.text[:-1])
+        except TypeError:
+            print(f"FormError: {val.text} is not the correct form to be processed into a float type")
+
+    # TODO: Get rid the num_classes thing and just deliver all of them
+    def get_grades(self):
         grades = []
 
-        for i in range(num_classes):
-            grades.append({self.class_names[i].text: self.number_grades[i].text})
+        try:
+            for i in range(len(self.number_grades) - 1):
+                grades.append({"id": str(i), "name": self.class_names[i].text, "number": self.number_grades[i], "letter": self.letter_grades[i].text})
 
-        for i in range(num_classes):
-            grades.append({self.class_names[i].text: self.letter_grades[i].text})
+        except IndexError:
+            print(f"No classes found. Most likely user and pass are wrong. Small chance that Veracross is down")
+            return False
 
         self.driver.close()
         return grades
